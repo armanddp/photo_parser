@@ -29,10 +29,27 @@ const ImageClassifier = ({ photo, onClassificationComplete }) => {
     loadModel();
   }, []);
 
+  // Reset predictions when photo changes
+  useEffect(() => {
+    if (photo) {
+      // Clear previous predictions when photo changes
+      setPredictions(null);
+      console.log('Photo changed, resetting predictions', photo.id);
+    }
+  }, [photo?.id]);
+
   // Classify the image when the model and image are ready
   useEffect(() => {
-    // Skip if we don't have what we need or if already classified
-    if (!model || !photo || !photo.file || predictions) return;
+    // Skip if we don't have what we need
+    if (!model || !photo || !photo.file) return;
+    
+    // Skip if we already have predictions for this specific photo
+    if (predictions && photo.contentTags && photo.contentTags.length > 0) {
+      console.log('Already classified this photo', photo.id);
+      return;
+    }
+    
+    console.log('Preparing to classify photo', photo.id);
     
     const classifyImage = async () => {
       if (!imageRef.current || !imageRef.current.complete) return;
@@ -41,6 +58,7 @@ const ImageClassifier = ({ photo, onClassificationComplete }) => {
         console.log('Classifying image with ID:', photo.id);
         // Classify the image
         const results = await model.classify(imageRef.current, 5); // Get top 5 predictions
+        console.log('Classification results:', results);
         setPredictions(results);
         
         // Pass the classification results to the parent component
@@ -52,17 +70,13 @@ const ImageClassifier = ({ photo, onClassificationComplete }) => {
         setError('Error identifying objects in the image.');
       }
     };
-
-    // Reset predictions when photo changes
-    setPredictions(null);
     
-    // Wait for the image to load if it hasn't already
-    if (imageRef.current) {
-      if (imageRef.current.complete) {
-        classifyImage();
-      }
+    // For already loaded images
+    if (imageRef.current && imageRef.current.complete) {
+      classifyImage();
     }
-  }, [model, photo?.id]); // Only depend on model and photo ID, not the entire photo object
+    // Otherwise the onLoad handler will take care of it
+  }, [model, photo?.id, predictions, onClassificationComplete]);
 
   // Create an object URL for the image
   const imageUrl = photo && photo.file ? URL.createObjectURL(photo.file) : null;
@@ -102,14 +116,17 @@ const ImageClassifier = ({ photo, onClassificationComplete }) => {
       {imageUrl && (
         <img 
           ref={imageRef}
+          key={photo.id} /* Add key to force re-render when photo changes */
           src={imageUrl}
           alt="Classification source"
           style={{ display: 'none' }}
           crossOrigin="anonymous"
           onLoad={() => {
             if (model && !predictions && !error) {
+              console.log('Image loaded, classifying photo:', photo.id);
               // Trigger classification when image loads
               model.classify(imageRef.current, 5).then(results => {
+                console.log('onLoad classification results:', results);
                 setPredictions(results);
                 if (onClassificationComplete) {
                   onClassificationComplete(photo, results);

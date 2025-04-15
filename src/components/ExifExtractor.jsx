@@ -70,40 +70,55 @@ const ExifExtractor = ({ photo, onExifProcessed }) => {
   }
 
   return (
-    <div className="exif-data">
-      <h3>EXIF Data</h3>
+    <div className="exif-data p-4 border rounded-lg">
+      <h3 className="text-xl font-semibold mb-4">EXIF Data</h3>
       
       {!exifData.hasExif && (
-        <p className="no-exif-message">{exifData.message || 'No EXIF data found'}</p>
+        <div className="no-exif-message bg-yellow-50 border border-yellow-200 p-3 rounded-md">
+          <p className="text-yellow-800">{exifData.message || 'No EXIF data found in this image'}</p>
+          <p className="text-sm text-yellow-600 mt-2">
+            For photos with location data:
+            <ul className="list-disc pl-5 mt-1">
+              <li>Use the camera capture feature with location permission enabled</li>
+              <li>Upload photos taken with GPS-enabled devices</li>
+            </ul>
+          </p>
+        </div>
       )}
       
       {exifData.hasExif && (
-        <div className="exif-details">
+        <div className="exif-details grid grid-cols-1 md:grid-cols-2 gap-4">
           {exifData.coordinates && (
-            <div className="exif-item">
-              <strong>Location:</strong> 
-              <span>{exifData.coordinates.lat.toFixed(6)}, {exifData.coordinates.lng.toFixed(6)}</span>
+            <div className="exif-item p-3 bg-blue-50 border border-blue-100 rounded-md">
+              <strong className="block text-blue-800 mb-1">Location:</strong> 
+              <span className="text-blue-700">{exifData.coordinates.lat.toFixed(6)}, {exifData.coordinates.lng.toFixed(6)}</span>
             </div>
           )}
           
           {exifData.timestamp && (
-            <div className="exif-item">
-              <strong>Timestamp:</strong> 
-              <span>{new Date(exifData.timestamp).toLocaleString()}</span>
+            <div className="exif-item p-3 bg-purple-50 border border-purple-100 rounded-md">
+              <strong className="block text-purple-800 mb-1">Timestamp:</strong> 
+              <span className="text-purple-700">{new Date(exifData.timestamp).toLocaleString()}</span>
             </div>
           )}
           
           {exifData.direction && (
-            <div className="exif-item">
-              <strong>Direction:</strong> 
-              <span>{exifData.direction}</span>
+            <div className="exif-item p-3 bg-green-50 border border-green-100 rounded-md">
+              <strong className="block text-green-800 mb-1">Direction:</strong> 
+              <span className="text-green-700">{exifData.direction}</span>
             </div>
           )}
           
           {(exifData.make || exifData.model) && (
-            <div className="exif-item">
-              <strong>Camera:</strong> 
-              <span>{[exifData.make, exifData.model].filter(Boolean).join(' ')}</span>
+            <div className="exif-item p-3 bg-amber-50 border border-amber-100 rounded-md">
+              <strong className="block text-amber-800 mb-1">Camera:</strong> 
+              <span className="text-amber-700">{[exifData.make, exifData.model].filter(Boolean).join(' ')}</span>
+            </div>
+          )}
+
+          {(!exifData.coordinates) && (
+            <div className="exif-item col-span-full p-3 bg-gray-50 border border-gray-200 rounded-md">
+              <p className="text-gray-700">No location data available for this photo.</p>
             </div>
           )}
         </div>

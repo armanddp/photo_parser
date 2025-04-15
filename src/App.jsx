@@ -65,7 +65,11 @@ function App() {
                       "relative group overflow-hidden rounded-lg border cursor-pointer aspect-square",
                       selectedPhoto && selectedPhoto.id === photo.id ? "ring-2 ring-primary ring-offset-2 ring-offset-background" : ""
                     )}
-                    onClick={() => setSelectedPhoto(photo)}
+                    onClick={() => {
+                      // Make sure we use the most up-to-date photo data when selecting
+                      const updatedPhoto = photos.find(p => p.id === photo.id);
+                      setSelectedPhoto(updatedPhoto || photo);
+                    }}
                   >
                     <img 
                       src={photo.dataUrl} 
