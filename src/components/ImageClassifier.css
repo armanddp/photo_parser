@@ -1,0 +1,88 @@
+.image-classifier {
+  margin-top: 20px;
+  padding: 15px;
+  background-color: #f8f9fa;
+  border-radius: 8px;
+}
+
+.image-classifier h3 {
+  margin-top: 0;
+  margin-bottom: 15px;
+}
+
+.classifier-loading, .classifier-error {
+  padding: 10px;
+  border-radius: 4px;
+  margin-bottom: 10px;
+}
+
+.classifier-loading {
+  background-color: #e9f7ef;
+  color: #28a745;
+}
+
+.classifier-error {
+  background-color: #f8d7da;
+  color: #dc3545;
+}
+
+.classifier-results {
+  margin-top: 10px;
+}
+
+.prediction-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.prediction-item {
+  display: flex;
+  flex-direction: column;
+  background-color: white;
+  padding: 10px;
+  border-radius: 4px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.prediction-label {
+  font-weight: 500;
+  margin-bottom: 5px;
+}
+
+.prediction-bar-container {
+  display: flex;
+  align-items: center;
+  height: 20px;
+  background-color: #f0f0f0;
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.prediction-bar {
+  height: 100%;
+  background: linear-gradient(90deg, #4facfe 0%, #00f2fe 100%);
+  border-radius: 10px;
+  transition: width 0.3s ease;
+}
+
+.prediction-probability {
+  margin-left: 10px;
+  font-size: 0.8rem;
+  color: #666;
+}
+
+.content-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+  margin-top: 5px;
+}
+
+.content-tag {
+  background-color: #e9ecef;
+  color: #495057;
+  padding: 2px 8px;
+  border-radius: 12px;
+  font-size: 0.75rem;
+}
